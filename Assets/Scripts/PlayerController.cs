@@ -8,10 +8,13 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 moveInput;
     private Transform CamTransform;
+
+    private Animator animatorRef;
     
     void Start()
     {
         CamTransform = Camera.main.transform;
+        animatorRef = GetComponent<Animator>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -22,7 +25,7 @@ public class PlayerController : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
     }
     
-    void Update()
+    void FixedUpdate()
     {
         Vector3 forward = CamTransform.forward;
         Vector3 right = CamTransform.right;
@@ -36,11 +39,16 @@ public class PlayerController : MonoBehaviour
         Vector3 direction = forward * moveInput.y + right * moveInput.x;
 
         if (direction.magnitude > 0.001f)
-        {
-            transform.Translate(direction * speed * Time.deltaTime);
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        { 
+            transform.Translate(direction * speed * Time.deltaTime, Space.World);
+           Quaternion targetRotation = Quaternion.LookRotation(direction);
+           transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+           
+           animatorRef.SetBool("IsWalking", true);
         }
-
+        else
+        {
+            animatorRef.SetBool("IsWalking", false);
+        }
     }
 }

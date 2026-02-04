@@ -30,7 +30,7 @@ public class TpsCameraController : MonoBehaviour
     }
     
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         rotationX += lookInput.x * sensitivity;
         rotationY -= lookInput.y * sensitivity;
@@ -40,7 +40,8 @@ public class TpsCameraController : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(rotationY, rotationX, 0);
         transform.rotation = rotation;
 
-        Vector3 position = target.position - (transform.forward*distance) + positionOffset;
+        Vector3 position = target.position - (transform.forward*distance);
+        position = position + (transform.right * positionOffset.x) + (transform.up * positionOffset.y);
         transform.position = position;
     }
 }
