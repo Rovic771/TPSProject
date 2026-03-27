@@ -48,7 +48,7 @@ public class Pathfindings : MonoBehaviour
             {
                 _detectedPlayer = false;
                 StartCoroutine(_playerManager.DieDelay());
-                StartCoroutine(_detectionSystem.DetectionDelay());
+                //StartCoroutine(_detectionSystem.DetectionDelay());
             }
         }
 
