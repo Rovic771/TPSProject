@@ -1,35 +1,74 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraDetection : Detection
 {
     private bool enemyInZone;
+    private EnemyDetection _enemyDetection;
     public override void OnTriggerEnter(Collider other)
     {
-        base.OnTriggerEnter(other);
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player")) // à mettre dans enemy detection +
+        {
+            DetectedPlayer(TestIfWall());
+        }
     }
 
+    public override void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player")) 
+        {
+            DetectedPlayer(TestIfWall());
+        }
+    }
+    
     public override void DetectedPlayer(bool isDetect)
     {
-        if (isDetect)
+        if (!isDetect)
         {
             enemyInZone = true;
-            Debug.Log("isDetect = " + isDetect);
+            GameObject test = CallEnemy();
+            test.GetComponentInChildren<EnemyDetection>().DetectedPlayer(false);
         }
         else
         {
             enemyInZone = false;
-            Debug.Log("isDetect = " + isDetect);
         }
     }
 
+    public override void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            DetectedPlayer(true);
+        }
+    }
+
+    private GameObject CallEnemy()
+    {
+        float distanceMin = 100000000;
+        GameObject nearestEnemy = null;
+        InfluenceZone influenceZone = GetComponentInChildren<InfluenceZone>();
+        if (influenceZone.enemyInInfluenceZone.Count != 0)
+        {
+            foreach (GameObject enemy in influenceZone.enemyInInfluenceZone)
+            {
+                float distance = Vector3.Distance(playerPosition, enemy.transform.position);
+                if (distance < distanceMin)
+                {
+                    nearestEnemy = enemy;
+                }
+            }
+            return nearestEnemy;
+        }
+        return null;
+    }
+    
     private void FixedUpdate()
     {
         if (enemyInZone)
         {
+            playerPosition = GetPlayerPos();
             gameObject.transform.parent.LookAt(player.transform);
-            TestIfWall();
+            DetectedPlayer(TestIfWall());
         }
     }
 }

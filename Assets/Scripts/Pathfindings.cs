@@ -9,13 +9,13 @@ public class Pathfindings : MonoBehaviour
     private Vector3 _currentDestination;
     private int _currentDestinationIndex = 0;
     private bool _detectedPlayer = false;
-    private Detection _detectionSystem;
+    private EnemyDetection _detectionEnemy;
     private PlayerManager _playerManager;
     
     private void Start()
     {
         _playerManager = player.GetComponent<PlayerManager>();
-        _detectionSystem = GetComponentInChildren<Detection>();
+        _detectionEnemy = GetComponentInChildren<EnemyDetection>();
         _currentDestination = objectifs[0].position;
         _agent = GetComponent<NavMeshAgent>();
         if (_agent != null && objectifs != null)
@@ -28,7 +28,7 @@ public class Pathfindings : MonoBehaviour
     {
         _currentDestination = playerPos;
         _agent.SetDestination(_currentDestination);
-        if (!_detectedPlayer && _detectionSystem.canDetect)
+        if (!_detectedPlayer && _detectionEnemy.canDetect)
         {
             _detectedPlayer = true;
         }
@@ -46,9 +46,10 @@ public class Pathfindings : MonoBehaviour
             }
             else
             {
+                Debug.Log("Joueur tué");
                 _detectedPlayer = false;
                 StartCoroutine(_playerManager.DieDelay());
-                //StartCoroutine(_detectionSystem.DetectionDelay());
+                StartCoroutine(_detectionEnemy.DetectionDelay());
             }
         }
 

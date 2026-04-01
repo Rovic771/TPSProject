@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using UnityEditor.Experimental.GraphView;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Detection : MonoBehaviour
@@ -11,40 +7,29 @@ public abstract class Detection : MonoBehaviour
     [SerializeField] Color rayColor = Color.green;
     [SerializeField] private Transform rayCastOrigin;
     [SerializeField] private LayerMask whatToHit;
-    private Pathfindings _pathfindingsScript;
+    public Pathfindings _pathfindingsScript;
     public bool canDetect = true;
     private Vector3 direction;
+    public Vector3 playerPosition;
     
     private void Start()
     {
         _pathfindingsScript = GetComponentInParent<Pathfindings>();
     }
 
-    public virtual void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player")) // à mettre dans enemy detection canDetect && 
-        {
-            Debug.Log("Joueur Entré");
-            TestIfWall();
-        }
-    }
+    public abstract void OnTriggerEnter(Collider other);
+
+    public abstract void OnTriggerStay(Collider other);
 
     public abstract void DetectedPlayer(bool _isDetect);
 
-    public void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
-        {
-            Debug.Log("Joueur Sorti");
-            DetectedPlayer(false);
-        }
-    }
+    public abstract void OnTriggerExit(Collider other);
 
-    private Vector3 GetPlayerPos()
+    public Vector3 GetPlayerPos()
     {
         return player.transform.position;
     }
-
+    
     protected bool TestIfWall()
     {
         direction = (player.transform.position - rayCastOrigin.position);
@@ -52,19 +37,14 @@ public abstract class Detection : MonoBehaviour
         Ray raycast = new Ray(rayCastOrigin.position, directionFlat);
         RaycastHit hit;
         Debug.DrawRay(rayCastOrigin.position, directionFlat, rayColor, 5 );
-        if (Physics.Raycast(raycast, out hit, whatToHit))
+        if (Physics.Raycast(raycast, out hit, Mathf.Infinity, whatToHit))
         {
+            //Debug.Log("Raycast touche " + hit.collider.gameObject.name);
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                Debug.Log("pas de mur");
-                DetectedPlayer(true);
                 return false;
-                //_pathfindingsScript.PursuitPlayer(GetPlayerPos());
-                //detectionIndicator.SetActive(true);
             }
         }
-        Debug.Log("mur");
-        DetectedPlayer(false);
         return true;
     }
 }

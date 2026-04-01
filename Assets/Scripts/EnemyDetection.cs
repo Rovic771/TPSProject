@@ -4,8 +4,9 @@ using UnityEngine;
 public class EnemyDetection : Detection
 {
     [SerializeField] private GameObject detectionIndicator;
+    private bool _enemyDetect;
     
-    public IEnumerator DetectionDelay() // classe Dectection Enemy
+    public IEnumerator DetectionDelay()
     {
         detectionIndicator.SetActive(false);
         canDetect = false;
@@ -13,8 +14,49 @@ public class EnemyDetection : Detection
         canDetect = true;
     }
 
+    public override void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            DetectedPlayer(TestIfWall());
+        }
+    }
+
+    public override void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player")) 
+        {
+            DetectedPlayer(TestIfWall());
+        }
+    }
+
     public override void DetectedPlayer(bool isDetect)
     {
-        throw new System.NotImplementedException();
+        if (!isDetect)
+        {
+            _enemyDetect = true;
+        }
+        else
+        {
+            _enemyDetect = false;
+        }
+    }
+
+    public override void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            DetectedPlayer(false);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (_enemyDetect && canDetect)
+        {
+            playerPosition = GetPlayerPos();
+            _pathfindingsScript.PursuitPlayer(playerPosition);
+            detectionIndicator.SetActive(true);
+        }
     }
 }
