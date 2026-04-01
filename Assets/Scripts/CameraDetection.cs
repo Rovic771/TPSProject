@@ -12,8 +12,7 @@ public class CameraDetection : Detection
 
     public override void DetectedPlayer(bool isDetect)
     {
-        Debug.Log("DetectedPlayer Appelé");
-        if (isDetect = true)
+        if (isDetect)
         {
             enemyInZone = true;
             Debug.Log("isDetect = " + isDetect);

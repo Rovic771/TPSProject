@@ -24,6 +24,7 @@ public abstract class Detection : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player")) // à mettre dans enemy detection canDetect && 
         {
+            Debug.Log("Joueur Entré");
             TestIfWall();
         }
     }
@@ -55,12 +56,14 @@ public abstract class Detection : MonoBehaviour
         {
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
+                Debug.Log("pas de mur");
                 DetectedPlayer(true);
                 return false;
                 //_pathfindingsScript.PursuitPlayer(GetPlayerPos());
                 //detectionIndicator.SetActive(true);
             }
         }
+        Debug.Log("mur");
         DetectedPlayer(false);
         return true;
     }
