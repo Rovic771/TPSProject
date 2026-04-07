@@ -44,10 +44,6 @@ public class EnemyDetection : Detection
         }
     }
     
-    public void GoToLastPlayerPos(Vector3 lastPlayerPos)
-    {
-        _pathfindingsScript.PursuitPlayer(lastPlayerPos);
-    }
 
     public override void OnTriggerExit(Collider other)
     {

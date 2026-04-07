@@ -8,7 +8,7 @@ public class Pathfindings : MonoBehaviour
     private NavMeshAgent _agent;
     private Vector3 _currentDestination;
     private int _currentDestinationIndex = 0;
-    private bool _detectedPlayer = false;
+    public bool _detectedPlayer = false;
     private EnemyDetection _detectionEnemy;
     private PlayerManager _playerManager;
     
@@ -34,8 +34,14 @@ public class Pathfindings : MonoBehaviour
         }
     }
     
+    public void GoToLastPlayerPos(Vector3 lastPlayerPos)
+    {
+        PursuitPlayer(lastPlayerPos);
+    }
+    
     void Update()
     {
+        Debug.Log("Enemy va a " + _currentDestination);
         if (Vector3.Distance(transform.position, _currentDestination) < 1.5f)
         {
             if (!_detectedPlayer)

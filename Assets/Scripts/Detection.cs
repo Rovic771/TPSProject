@@ -14,7 +14,12 @@ public abstract class Detection : MonoBehaviour
     
     private void Start()
     {
+        Init();
         _pathfindingsScript = GetComponentInParent<Pathfindings>();
+    }
+
+    public virtual void Init()
+    {
     }
 
     public abstract void OnTriggerEnter(Collider other);
@@ -39,7 +44,7 @@ public abstract class Detection : MonoBehaviour
         Debug.DrawRay(rayCastOrigin.position, directionFlat, rayColor, 5 );
         if (Physics.Raycast(raycast, out hit, Mathf.Infinity, whatToHit))
         {
-            Debug.Log("Raycast touche " + hit.collider.gameObject.name);
+            //Debug.Log("Raycast touche " + hit.collider.gameObject.name);
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
                 return false;

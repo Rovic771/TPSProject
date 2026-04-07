@@ -1,9 +1,19 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraDetection : Detection
 {
     private bool enemyInZone;
     private EnemyDetection _enemyDetection;
+    private InfluenceZone influenceZone;
+    private EnemyDetection test2;
+
+    public override void Init()
+    {
+        InfluenceZone influenceZone = GetComponentInChildren<InfluenceZone>();
+        EnemyDetection test2 = test.GetComponentInChildren<EnemyDetection>();
+    }
+
     public override void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player")) // à mettre dans enemy detection +
@@ -25,15 +35,12 @@ public class CameraDetection : Detection
         if (!isDetect)
         {
             enemyInZone = true;
-            /*
             GameObject test = CallEnemy();
             Debug.Log("test c'est un " + test);
             if (test != null)
             {
-                EnemyDetection test2 = test.GetComponentInChildren<EnemyDetection>();
-                test2.GoToLastPlayerPos(GetPlayerPos());
                 test2.cameraDetected = true;
-            }*/
+            }
             
         }
         else
@@ -54,7 +61,6 @@ public class CameraDetection : Detection
     {
         float distanceMin = 100000000;
         GameObject nearestEnemy = null;
-        InfluenceZone influenceZone = GetComponentInChildren<InfluenceZone>();
         if (influenceZone.enemyInInfluenceZone.Count != 0)
         {
             foreach (GameObject enemy in influenceZone.enemyInInfluenceZone)
@@ -66,9 +72,8 @@ public class CameraDetection : Detection
                     nearestEnemy = enemy;
                 }
             }
-            return nearestEnemy;
         }
-        return null;
+        return nearestEnemy;
     }
     
     private void FixedUpdate()
