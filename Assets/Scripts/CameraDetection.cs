@@ -25,8 +25,16 @@ public class CameraDetection : Detection
         if (!isDetect)
         {
             enemyInZone = true;
+            /*
             GameObject test = CallEnemy();
-            test.GetComponentInChildren<EnemyDetection>().DetectedPlayer(false);
+            Debug.Log("test c'est un " + test);
+            if (test != null)
+            {
+                EnemyDetection test2 = test.GetComponentInChildren<EnemyDetection>();
+                test2.GoToLastPlayerPos(GetPlayerPos());
+                test2.cameraDetected = true;
+            }*/
+            
         }
         else
         {
@@ -54,6 +62,7 @@ public class CameraDetection : Detection
                 float distance = Vector3.Distance(playerPosition, enemy.transform.position);
                 if (distance < distanceMin)
                 {
+                    distanceMin = distance;
                     nearestEnemy = enemy;
                 }
             }

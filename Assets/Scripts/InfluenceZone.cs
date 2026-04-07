@@ -7,8 +7,10 @@ public class InfluenceZone : MonoBehaviour
     public List<GameObject> enemyInInfluenceZone =  new List<GameObject>();
     private void OnTriggerEnter(Collider other)
     {
+        //Debug.Log("objet entré dans la zone " + other.gameObject);
         if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
+            Debug.Log("Enemy entré");
             enemyInInfluenceZone.Add(other.gameObject);
         }
     }

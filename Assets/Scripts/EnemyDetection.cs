@@ -5,6 +5,8 @@ public class EnemyDetection : Detection
 {
     [SerializeField] private GameObject detectionIndicator;
     private bool _enemyDetect;
+    public bool cameraDetected = false;
+    //public Vector3 lastPlayerPos;
     
     public IEnumerator DetectionDelay()
     {
@@ -41,12 +43,17 @@ public class EnemyDetection : Detection
             _enemyDetect = false;
         }
     }
+    
+    public void GoToLastPlayerPos(Vector3 lastPlayerPos)
+    {
+        _pathfindingsScript.PursuitPlayer(lastPlayerPos);
+    }
 
     public override void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            DetectedPlayer(false);
+            DetectedPlayer(true);
         }
     }
 
@@ -55,7 +62,7 @@ public class EnemyDetection : Detection
         if (_enemyDetect && canDetect)
         {
             playerPosition = GetPlayerPos();
-            _pathfindingsScript.PursuitPlayer(playerPosition);
+            _pathfindingsScript.PursuitPlayer(GetPlayerPos());
             detectionIndicator.SetActive(true);
         }
     }
