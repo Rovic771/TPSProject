@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -7,13 +8,23 @@ public class CameraDetection : Detection
     private EnemyDetection _enemyDetection;
     private InfluenceZone influenceZone;
     private EnemyDetection test2;
+    private StateCamera _stateCamera;
+    [SerializeField] private float coyoteTimeExitCamera = 0.3f;
 
+    private IEnumerator CoyoteTimeExitCamera()
+    {
+        yield return new WaitForSeconds(coyoteTimeExitCamera);
+        enemyInZone = false;
+        StartCoroutine(_stateCamera.WaitChangeState());
+    }
+    
     public override void Init()
     {
+        _stateCamera = GetComponentInParent<StateCamera>();
         InfluenceZone influenceZone = GetComponentInChildren<InfluenceZone>();
-        EnemyDetection test2 = test.GetComponentInChildren<EnemyDetection>();
+        //EnemyDetection test2 = test.GetComponentInChildren<EnemyDetection>();
     }
-
+    
     public override void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player")) // à mettre dans enemy detection +
@@ -34,18 +45,18 @@ public class CameraDetection : Detection
     {
         if (!isDetect)
         {
+            StopAllCoroutines();
             enemyInZone = true;
             GameObject test = CallEnemy();
-            Debug.Log("test c'est un " + test);
-            if (test != null)
+            if (test is not null)
             {
                 test2.cameraDetected = true;
             }
-            
         }
         else
         {
-            enemyInZone = false;
+            Debug.Log("on le voit plus");
+            StartCoroutine(CoyoteTimeExitCamera());
         }
     }
 
@@ -57,9 +68,10 @@ public class CameraDetection : Detection
         }
     }
 
+    
     private GameObject CallEnemy()
     {
-        float distanceMin = 100000000;
+        float distanceMin = int.MaxValue;
         GameObject nearestEnemy = null;
         if (influenceZone.enemyInInfluenceZone.Count != 0)
         {
@@ -78,10 +90,11 @@ public class CameraDetection : Detection
     
     private void FixedUpdate()
     {
+        Debug.Log("EnemyInZone " + enemyInZone);
         if (enemyInZone)
         {
             playerPosition = GetPlayerPos();
-            gameObject.transform.parent.LookAt(player.transform);
+            //gameObject.transform.parent.LookAt(player.transform);
             DetectedPlayer(TestIfWall());
         }
     }

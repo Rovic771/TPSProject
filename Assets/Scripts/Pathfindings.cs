@@ -41,7 +41,7 @@ public class Pathfindings : MonoBehaviour
     
     void Update()
     {
-        Debug.Log("Enemy va a " + _currentDestination);
+        //Debug.Log("Enemy va a " + _currentDestination);
         if (Vector3.Distance(transform.position, _currentDestination) < 1.5f)
         {
             if (!_detectedPlayer)

@@ -355,13 +355,14 @@ GameObject:
   - component: {fileID: 71941188}
   - component: {fileID: 71941187}
   - component: {fileID: 71941186}
+  - component: {fileID: 71941190}
   m_Layer: 0
   m_Name: CameraObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!135 &71941186
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -448,7 +449,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 71941185}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.07478245, y: 0.9237542, z: -0.23717968, w: -0.2912585}
+  m_LocalRotation: {x: -0.077828385, y: 0.9212198, z: -0.24684015, w: -0.29045945}
   m_LocalPosition: {x: -0.47, y: 3.68, z: 4.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -457,7 +458,20 @@ Transform:
   - {fileID: 183953340}
   - {fileID: 2033143154}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 28.8, y: 215, z: 0}
+  m_LocalEulerAnglesHint: {x: 30, y: 215, z: 0}
+--- !u!114 &71941190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 71941185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06c62b2a4742c2b4a84296c729ab2200, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  waitTime: 3
 --- !u!1 &181201108
 GameObject:
   m_ObjectHideFlags: 0
@@ -4207,6 +4221,7 @@ MonoBehaviour:
   _pathfindingsScript: {fileID: 0}
   canDetect: 1
   playerPosition: {x: 0, y: 0, z: 0}
+  coyoteTimeExitCamera: 0.3
 --- !u!1 &2041546554
 GameObject:
   m_ObjectHideFlags: 0
