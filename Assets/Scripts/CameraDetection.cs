@@ -7,33 +7,28 @@ public class CameraDetection : Detection
     private bool enemyInZone;
     private EnemyDetection _enemyDetection;
     private InfluenceZone influenceZone;
-    private EnemyDetection test2;
     private StateCamera _stateCamera;
+    private MeshRenderer areaDetectionMaterial;
+    [SerializeField] private Material detectedPlayerMat;
+    [SerializeField] private Material notDetectedPlayerMat;
     [SerializeField] private float coyoteTimeExitCamera = 0.3f;
 
     private IEnumerator CoyoteTimeExitCamera()
     {
         yield return new WaitForSeconds(coyoteTimeExitCamera);
         enemyInZone = false;
+        areaDetectionMaterial.material = notDetectedPlayerMat;
         StartCoroutine(_stateCamera.WaitChangeState());
     }
     
     public override void Init()
     {
         _stateCamera = GetComponentInParent<StateCamera>();
-        InfluenceZone influenceZone = GetComponentInChildren<InfluenceZone>();
-        //EnemyDetection test2 = test.GetComponentInChildren<EnemyDetection>();
+        influenceZone = GetComponentInChildren<InfluenceZone>();
+        areaDetectionMaterial = GetComponent<MeshRenderer>();
     }
     
     public override void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player")) // à mettre dans enemy detection +
-        {
-            DetectedPlayer(TestIfWall());
-        }
-    }
-
-    public override void OnTriggerStay(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player")) 
         {
@@ -41,21 +36,23 @@ public class CameraDetection : Detection
         }
     }
     
-    public override void DetectedPlayer(bool isDetect)
+    public override void DetectedPlayer(bool notDetect)
     {
-        if (!isDetect)
+        if (!notDetect && _playerManager.IsTargetable())
         {
+            playerPosition = GetPlayerPos();
+            areaDetectionMaterial.material = detectedPlayerMat;
             StopAllCoroutines();
             enemyInZone = true;
-            GameObject test = CallEnemy();
-            if (test is not null)
+            GameObject nearestEnemy = CallEnemy();
+            
+            if (nearestEnemy is not null)
             {
-                test2.cameraDetected = true;
+                nearestEnemy.GetComponent<Pathfindings>().GoToLastPlayerPos(player.transform.position);
             }
         }
         else
         {
-            Debug.Log("on le voit plus");
             StartCoroutine(CoyoteTimeExitCamera());
         }
     }
@@ -90,11 +87,10 @@ public class CameraDetection : Detection
     
     private void FixedUpdate()
     {
-        Debug.Log("EnemyInZone " + enemyInZone);
         if (enemyInZone)
         {
             playerPosition = GetPlayerPos();
-            //gameObject.transform.parent.LookAt(player.transform);
+            gameObject.transform.parent.LookAt(player.transform);
             DetectedPlayer(TestIfWall());
         }
     }

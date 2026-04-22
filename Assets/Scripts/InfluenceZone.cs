@@ -8,16 +8,15 @@ public class InfluenceZone : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log("objet entré dans la zone " + other.gameObject);
-        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if (other.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log("Enemy entré");
             enemyInInfluenceZone.Add(other.gameObject);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if(other.gameObject.CompareTag("Enemy"))
         {
             enemyInInfluenceZone.Remove(other.gameObject);
         }
