@@ -24,6 +24,12 @@ public class PlayerController : MonoBehaviour
     {
         moveInput = context.ReadValue<Vector2>();
     }
+
+    public void OnInteract(InputAction.CallbackContext context, GameObject objet)
+    {
+        Debug.Log(objet.name + " ramassé");
+        Destroy(objet);
+    }
     
     void FixedUpdate()
     {

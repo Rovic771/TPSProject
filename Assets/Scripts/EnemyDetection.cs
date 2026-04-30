@@ -4,7 +4,6 @@ using UnityEngine;
 public class EnemyDetection : Detection
 {
     [SerializeField] private GameObject detectionIndicator;
-    private bool _enemyDetect;
     
     public IEnumerator DetectionDelay()
     {
@@ -13,11 +12,13 @@ public class EnemyDetection : Detection
         yield return new WaitForSeconds(5);
         canDetect = true;
     }
+    
 
     public override void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && _playerManager.IsTargetable())
         {
+            StopAllCoroutines();
             DetectedPlayer(TestIfWall());
         }
     }
@@ -41,7 +42,7 @@ public class EnemyDetection : Detection
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            DetectedPlayer(true);
+            StartCoroutine(TimeBeforeEscapePlayer());
         }
     }
 

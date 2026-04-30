@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -12,6 +14,14 @@ public abstract class Detection : MonoBehaviour
     private Vector3 direction;
     public Vector3 playerPosition;
     public PlayerManager _playerManager; 
+    protected bool _enemyDetect;
+    [SerializeField] public float timeEscape = 10f;
+    
+    public IEnumerator TimeBeforeEscapePlayer()
+    {
+        yield return new WaitForSeconds(timeEscape);
+        DetectedPlayer(true);
+    }
     
     private void Start()
     {
@@ -29,7 +39,9 @@ public abstract class Detection : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player")) 
         {
-            if (_playerManager.IsTargetable() && _playerManager is not null) DetectedPlayer(TestIfWall());
+            if (_playerManager.IsTargetable() && _playerManager is not null && !_enemyDetect) DetectedPlayer(TestIfWall());
+            else if (_playerManager.IsTargetable() && _playerManager is not null && _enemyDetect)
+                StartCoroutine(TimeBeforeEscapePlayer());
             else DetectedPlayer(true);
         }
     }
