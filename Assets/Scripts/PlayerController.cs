@@ -10,11 +10,15 @@ public class PlayerController : MonoBehaviour
     private Transform CamTransform;
 
     private Animator animatorRef;
+    public bool canCollect = false;
+    public bool canOpen = false;
+    private PlayerManager playerManager;
     
     void Start()
     {
         CamTransform = Camera.main.transform;
         animatorRef = GetComponent<Animator>();
+        playerManager = GetComponent<PlayerManager>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -25,14 +29,28 @@ public class PlayerController : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
     }
 
-    public void OnInteract(InputAction.CallbackContext context, GameObject objet)
+    public void OnInteract(InputAction.CallbackContext context)
     {
-        Debug.Log(objet.name + " ramassé");
-        Destroy(objet);
+        if (context.performed)
+        {
+            if (canCollect == true)
+            {
+                playerManager.Collect();
+                GameManager.instance.advancement++;
+            }
+
+            if (canOpen == true)
+            {
+                playerManager.Open();
+                GameManager.instance.advancement++;
+            }
+        }
     }
     
     void FixedUpdate()
     {
+        
+        Debug.Log("Can Collect " + canCollect);
         Vector3 forward = CamTransform.forward;
         Vector3 right = CamTransform.right;
 
